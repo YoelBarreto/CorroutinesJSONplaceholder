@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,37 +19,22 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
-
-    val retrofit = RetrofitHelper.getInstance()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CorroutinesZeroToHeroTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Surface {
                     SuperHeroList()
                 }
             }
         }
-
-        lifecycleScope.launch {
-            tumama()
-            val response: Response<SuperHeroDataResponse> = retrofit.getSuperheroes("a")
-            if (response.isSuccessful){
-                Log.i("DAM", "FUNCIONO")
-            }
-        }
     }
-
-    suspend fun tumama(){
-
-    }
-
 }
 
 @Composable
 fun SuperHeroList() {
+    val retrofit = RetrofitHelper.getInstance()
     Text(
         text = "",
         modifier = Modifier
