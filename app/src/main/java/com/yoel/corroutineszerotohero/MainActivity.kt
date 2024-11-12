@@ -33,9 +33,9 @@ class MainActivity : ComponentActivity() {
             val resultado: Response<List<SuperHeroDataResponse>> = retrofit.getSuperheroes()
             withContext(Dispatchers.Main) {
                 if (resultado.isSuccessful) {
-                    Log.i("ejemplo1", "$resultado")
-                    Toast.makeText(this@MainActivity, "Funciona", Toast.LENGTH_SHORT).show()
-                    Log.i("ejemplo2", resultado.body().toString())
+//                    Log.i("ejemplo1", "$resultado")
+//                    Toast.makeText(this@MainActivity, "Funciona", Toast.LENGTH_SHORT).show()
+//                    Log.i("ejemplo2", resultado.body().toString())
 
                     setContent {
                         CorroutinesZeroToHeroTheme {
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PostsList(posts: List<SuperHeroDataResponse>) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column() {
         posts.forEach { post ->
             SuperheroItem(post)
         }
@@ -62,6 +62,7 @@ fun PostsList(posts: List<SuperHeroDataResponse>) {
 }
 
 @Composable
+//
 fun SuperheroItem(post: SuperHeroDataResponse) {
     Column() {
         Text(text = "UserId: ${post.userId}")
