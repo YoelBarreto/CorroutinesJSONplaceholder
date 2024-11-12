@@ -6,9 +6,13 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiServices {
-
-    @GET("/api/6e6f40b0820bb3c2a01421a88c266428/search/{name}")
-    suspend fun getSuperheroes(@Path("name") superheroName:String): Response<SuperHeroDataResponse>
+    @GET("/posts")
+    suspend fun getSuperheroes(): Response<List<SuperHeroDataResponse>>
 }
 
-data class SuperHeroDataResponse(@SerializedName("response") val response:String)
+data class SuperHeroDataResponse(
+    @SerializedName("userId") val userId:Int,
+    @SerializedName("id") val id:Int,
+    @SerializedName("title") val title:String,
+    @SerializedName("body") val body:String
+)
