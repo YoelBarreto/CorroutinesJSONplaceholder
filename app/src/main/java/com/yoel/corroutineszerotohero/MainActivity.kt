@@ -2,16 +2,16 @@ package com.yoel.corroutineszerotohero
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,23 +21,28 @@ import com.yoel.corroutineszerotohero.ui.theme.CorroutinesZeroToHeroTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.w3c.dom.Text
 import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         val retrofit = RetrofitHelper.getInstance()
-        lifecycleScope.launch() {
-            val resultado :Response<List<SuperHeroDataResponse>> = retrofit.getSuperheroes()
-            withContext(Dispatchers.Main){
-                if (resultado.isSuccessful){
-                    Log.i("ejemplo", "${resultado}")
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultado: Response<List<SuperHeroDataResponse>> = retrofit.getSuperheroes()
+            withContext(Dispatchers.Main) {
+                if (resultado.isSuccessful) {
+                    Log.i("ejemplo1", "$resultado")
+                    Toast.makeText(this@MainActivity, "Funciona", Toast.LENGTH_SHORT).show()
+                    Log.i("ejemplo2", resultado.body().toString())
+
                     setContent {
                         CorroutinesZeroToHeroTheme {
-                            Surface {
-                                SuperHeroList(resultado)
+                            Surface(modifier = Modifier.fillMaxSize()) {
+                                resultado.body()?.let { posts ->
+                                    PostsList(posts)
+                                }
                             }
                         }
                     }
@@ -48,13 +53,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SuperHeroList(posts: Response<List<SuperHeroDataResponse>>) {
+fun PostsList(posts: List<SuperHeroDataResponse>) {
     Column(modifier = Modifier.padding(16.dp)) {
         posts.forEach { post ->
-            Text("${post.userId}")
-            Text("${post.id}")
-            Text("${post.title}")
-            Text("${post.body}")
+            SuperheroItem(post)
         }
     }
 }
+
+@Composable
+fun SuperheroItem(post: SuperHeroDataResponse) {
+    Column() {
+        Text(text = "UserId: ${post.userId}")
+        Text(text = "ID: ${post.id}")
+        Text(text = "Title: ${post.title}")
+        Text(text = "Body: ${post.body}")
+    }
+}
+
